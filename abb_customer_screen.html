@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Customer Information - Ateneo Blue Band</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #16379b 0%, #0d2461 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 600px;
+      width: 100%;
+      padding: 50px 40px;
+      animation: slideIn 0.5s ease-out;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 20px;
+      background: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 8px 20px rgba(22, 55, 155, 0.3);
+    }
+
+    .logo img {
+      width: 80%;
+      height: 80%;
+      object-fit: contain;
+    }
+
+    h1 {
+      color: #16379b;
+      font-size: 28px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      font-size: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      color: #374151;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 15px 18px;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus {
+      outline: none;
+      border-color: #16379b;
+      box-shadow: 0 0 0 4px rgba(22, 55, 155, 0.1);
+    }
+
+    input::placeholder {
+      color: #9ca3af;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 18px;
+      background: #16379b;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-submit:hover {
+      background: #0d2461;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(22, 55, 155, 0.3);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .success-message {
+      display: none;
+      background: #10b981;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      text-align: center;
+      font-weight: 600;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    .error {
+      border-color: #ef4444 !important;
+    }
+
+    .error-message {
+      color: #ef4444;
+      font-size: 13px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .info-box {
+      background: #f0f9ff;
+      border-left: 4px solid #16379b;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      color: #1e40af;
+      font-size: 14px;
+    }
+
+    .info-box strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .item-tile {
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      position: relative;
+    }
+
+    .item-tile:hover {
+      border-color: #16379b;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(22, 55, 155, 0.15);
+    }
+
+    .item-tile.selected {
+      background: #16379b;
+      border-color: #16379b;
+      color: white;
+    }
+
+    .item-tile .item-name {
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 8px;
+      word-wrap: break-word;
+    }
+
+    .item-tile .item-price {
+      font-size: 14px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .item-tile.selected .item-price {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .item-tile .qty-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #10b981;
+      color: white;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+    }
+
+    .quantity-controls {
+      display: none;
+      margin-top: 12px;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .item-tile.selected .quantity-controls {
+      display: flex;
+    }
+
+    .qty-btn {
+      width: 30px;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: white;
+      border-radius: 6px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .qty-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .qty-display {
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    .selected-items-summary {
+      background: #f9fafb;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .selected-items-summary.show {
+      display: block;
+    }
+
+    .selected-items-summary h4 {
+      color: #16379b;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .selected-items-summary .item-line {
+      font-size: 13px;
+      color: #374151;
+      padding: 4px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .selected-items-summary .item-line:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo"><img src="seal.png" alt="Ateneo Seal" /></div>
+      <h1>Welcome!</h1>
+      <p class="subtitle">Please fill in your information</p>
+    </div>
+
+    <div class="info-box">
+      <strong>📋 Before you start:</strong>
+      Please have your information ready. All fields are required.
+    </div>
+
+    <form id="customer-form">
+      <div class="form-group">
+        <label for="name">Full Name *</label>
+        <input type="text" id="name" name="name" placeholder="e.g. Juan Dela Cruz" required autocomplete="name" />
+        <div class="error-message" id="name-error">Please enter your full name</div>
+      </div>
+
+      <div class="form-group">
+        <label for="grade">Grade and Section *</label>
+        <input type="text" id="grade" name="grade" placeholder="e.g. 11-Hurtado" required />
+        <div class="error-message" id="grade-error">Please enter your grade and section</div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address *</label>
+        <input type="email" id="email" name="email" placeholder="student@addu.edu.ph" required autocomplete="email" />
+        <div class="error-message" id="email-error">Please enter a valid email address</div>
+      </div>
+
+      <div class="form-group">
+        <label for="items">Items to Purchase</label>
+        <div id="items-container" class="items-grid">
+          <!-- Item tiles will be added here -->
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit">Submit Information</button>
+    </form>
+
+    <div class="success-message" id="success-message">
+      ✅ Information submitted successfully! Please proceed to payment.
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('customer-form');
+    const nameInput = document.getElementById('name');
+    const gradeInput = document.getElementById('grade');
+    const emailInput = document.getElementById('email');
+    const successMessage = document.getElementById('success-message');
+    const itemsContainer = document.getElementById('items-container');
+
+    // Load preset items from localStorage
+    let presetItems = [];
+    let selectedItems = {}; // Track selected items: { itemIdx: quantity }
+
+    function loadPresetItems() {
+      const saved = localStorage.getItem('preset_items_abb');
+      if (saved) {
+        try {
+          presetItems = JSON.parse(saved);
+        } catch (e) {
+          presetItems = [];
+        }
+      }
+      renderItemTiles();
+    }
+
+    // Render item tiles
+    function renderItemTiles() {
+      itemsContainer.innerHTML = '';
+
+      if (presetItems.length === 0) {
+        itemsContainer.innerHTML = '<p style="color:#6b7280; font-size:14px; text-align:center; padding:20px;">No items available. Please add preset items in the main receipt generator.</p>';
+        return;
+      }
+
+      presetItems.forEach((item, idx) => {
+        if (!item.name) return;
+
+        const tile = document.createElement('div');
+        tile.className = 'item-tile';
+        if (selectedItems[idx]) {
+          tile.classList.add('selected');
+        }
+
+        tile.innerHTML = `
+          <div class="item-name">${item.name}</div>
+          <div class="item-price">₱${item.price.toFixed(2)}</div>
+          ${selectedItems[idx] ? `<div class="qty-badge">${selectedItems[idx]}</div>` : ''}
+          <div class="quantity-controls">
+            <button type="button" class="qty-btn qty-minus">−</button>
+            <div class="qty-display">${selectedItems[idx] || 1}</div>
+            <button type="button" class="qty-btn qty-plus">+</button>
+          </div>
+        `;
+
+        // Toggle selection on tile click (but not on buttons)
+        tile.addEventListener('click', (e) => {
+          if (e.target.classList.contains('qty-btn')) return;
+
+          if (selectedItems[idx]) {
+            delete selectedItems[idx];
+          } else {
+            selectedItems[idx] = 1;
+          }
+          renderItemTiles();
+        });
+
+        // Quantity controls
+        const minusBtn = tile.querySelector('.qty-minus');
+        const plusBtn = tile.querySelector('.qty-plus');
+
+        if (minusBtn) {
+          minusBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (selectedItems[idx] > 1) {
+              selectedItems[idx]--;
+              renderItemTiles();
+            }
+          });
+        }
+
+        if (plusBtn) {
+          plusBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectedItems[idx] = (selectedItems[idx] || 1) + 1;
+            renderItemTiles();
+          });
+        }
+
+        itemsContainer.appendChild(tile);
+      });
+    }
+
+    // Initialize
+    loadPresetItems();
+
+    // Clear error styling when user types
+    [nameInput, gradeInput, emailInput].forEach(input => {
+      input.addEventListener('input', () => {
+        input.classList.remove('error');
+        document.getElementById(`${input.id}-error`).classList.remove('show');
+      });
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Reset errors
+      document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+      document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
+
+      let isValid = true;
+
+      // Validate name
+      if (nameInput.value.trim().length < 3) {
+        nameInput.classList.add('error');
+        document.getElementById('name-error').classList.add('show');
+        isValid = false;
+      }
+
+      // Validate grade
+      if (gradeInput.value.trim().length < 2) {
+        gradeInput.classList.add('error');
+        document.getElementById('grade-error').classList.add('show');
+        isValid = false;
+      }
+
+      // Validate email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(emailInput.value.trim())) {
+        emailInput.classList.add('error');
+        document.getElementById('email-error').classList.add('show');
+        isValid = false;
+      }
+
+      if (!isValid) return;
+
+      // Collect selected items from tiles
+      const itemsArray = [];
+      Object.keys(selectedItems).forEach(idx => {
+        const item = presetItems[parseInt(idx)];
+        const qty = selectedItems[idx];
+        itemsArray.push({
+          description: item.name,
+          quantity: qty,
+          price: item.price
+        });
+      });
+
+      // Get the data
+      const customerData = {
+        name: nameInput.value.trim(),
+        grade: gradeInput.value.trim(),
+        email: emailInput.value.trim(),
+        items: itemsArray,
+        timestamp: new Date().toISOString()
+      };
+
+      // Send to parent window (your main receipt generator)
+      if (window.opener && !window.opener.closed) {
+        const message = {
+          type: 'CUSTOMER_INFO',
+          data: customerData
+        };
+
+        // Send immediately
+        window.opener.postMessage(message, '*');
+
+        // Send again after short delays to ensure delivery
+        setTimeout(() => {
+          if (window.opener && !window.opener.closed) {
+            window.opener.postMessage(message, '*');
+          }
+        }, 100);
+        setTimeout(() => {
+          if (window.opener && !window.opener.closed) {
+            window.opener.postMessage(message, '*');
+          }
+        }, 300);
+
+        console.log('✅ Sent customer data to receipt generator:', customerData);
+      }
+
+      // Also store in localStorage as backup
+      localStorage.setItem('abb_customer_data', JSON.stringify(customerData));
+
+      // Show success message
+      successMessage.classList.add('show');
+      successMessage.innerHTML = '✅ Information sent successfully!<br><small style="font-size:12px;">You can close this window or enter another customer.</small>';
+
+      // Clear form after 3 seconds and hide success message
+      setTimeout(() => {
+        form.reset();
+        selectedItems = {};
+        renderItemTiles();
+        successMessage.classList.remove('show');
+        successMessage.innerHTML = '✅ Information submitted successfully! Please proceed to payment.';
+        nameInput.focus();
+      }, 3000);
+    });
+
+    // Auto-focus on name field when page loads
+    window.addEventListener('load', () => {
+      nameInput.focus();
+    });
+
+    // Listen for clear command from parent window
+    window.addEventListener('message', (event) => {
+      if (event.data.type === 'CLEAR_FORM') {
+        form.reset();
+        selectedItems = {};
+        renderItemTiles();
+        successMessage.classList.remove('show');
+        nameInput.focus();
+      }
+    });
+  </script>
+</body>
+
+</html>
